@@ -1,0 +1,53 @@
+# Physics-guided DDPM evaluation configuration for MRMS precipitation nowcasting
+
+project:
+  name: "mrms-physics-guided-ddpm"
+  seed: 42
+
+data:
+  data_folder: "data/mrms_3hr_cubes_128"
+  precip_key: "precip"
+
+  input_steps: 60
+  output_steps: 30
+
+  train_ratio: 0.70
+  val_ratio: 0.15
+
+normalization:
+  rain_norm: 20.0
+  log_transform: true
+
+loader:
+  batch_size: 1
+  num_workers: 4
+  pin_memory: true
+
+model:
+  in_channels: 1
+  condition_channels: 1
+  out_channels: 1
+  base_channels: 64
+  time_embedding_dim: 128
+
+diffusion:
+  timesteps: 50
+  beta_start: 0.0001
+  beta_end: 0.02
+
+physics_guidance:
+  num_realizations: 20
+
+  mass_weight: 1.0
+  temporal_weight: 0.2
+  spatial_weight: 0.2
+  persistence_weight: 1.0
+
+evaluation:
+  thresholds_mmhr: [0.5, 2.0, 5.0, 10.0]
+  max_batches: null
+
+outputs:
+  checkpoint_path: "outputs/checkpoints/best_ddpm.pt"
+  metrics_path: "outputs/physics_ddpm_test_metrics.txt"
+  figure_path: "outputs/figures/physics_ddpm_prediction_example.png"
