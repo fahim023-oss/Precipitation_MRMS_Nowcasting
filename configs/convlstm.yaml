@@ -1,0 +1,61 @@
+# ConvLSTM baseline configuration for MRMS precipitation nowcasting
+
+project:
+  name: "mrms-convlstm-baseline"
+  seed: 42
+
+data:
+  data_folder: "data/mrms_3hr_cubes_128"
+  precip_key: "precip"
+
+  input_steps: 60
+  output_steps: 30
+
+  train_ratio: 0.70
+  val_ratio: 0.15
+
+normalization:
+  rain_norm: 20.0
+  log_transform: true
+
+loader:
+  batch_size: 4
+  num_workers: 4
+  pin_memory: true
+
+model:
+  hidden1: 64
+  hidden2: 96
+  kernel_size: 3
+
+training:
+  epochs: 50
+  patience: 10
+
+  lr: 0.001
+  weight_decay: 0.0001
+  eta_min: 0.00001
+
+  grad_clip: 1.0
+
+  teacher_forcing_start: 1.0
+  teacher_forcing_end: 0.0
+  teacher_forcing_epochs: 20
+
+loss:
+  # This threshold is in physical mm/hr.
+  # The training script converts it to model space.
+  heavy_threshold_mmhr: 5.0
+  heavy_weight: 3.0
+
+evaluation:
+  thresholds_mmhr: [0.5, 2.0, 5.0, 10.0]
+
+outputs:
+  checkpoint_path: "outputs/checkpoints/best_convlstm.pt"
+  metrics_path: "outputs/convlstm_test_metrics.txt"
+  training_curve_path: "outputs/figures/convlstm_training_curve.png"
+  prediction_figure_path: "outputs/figures/convlstm_prediction_example.png"
+
+plotting:
+  lead_times: [0, 9, 19, 29]
