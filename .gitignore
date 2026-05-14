@@ -1,0 +1,37 @@
+# Full MRMS data are not tracked by Git
+data/**/*.npz
+data/**/*.npy
+data/**/*.h5
+data/**/*.hdf5
+
+# Keep empty data folders
+!data/.gitkeep
+!data/mrms_3hr_cubes_128/
+!data/mrms_3hr_cubes_128/.gitkeep
+
+# Model checkpoints and generated outputs
+*.pt
+*.pth
+*.ckpt
+outputs/checkpoints/*
+outputs/figures/*
+!outputs/.gitkeep
+!outputs/checkpoints/.gitkeep
+!outputs/figures/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
